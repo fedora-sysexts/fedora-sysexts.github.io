@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: Thilo Fromm <thilo.alexander@gmail.com>
+# SPDX-FileCopyrightText: James Le Cuirot <chewi@aura-online.co.uk>
+# SPDX-FileCopyrightText: Timothée Ravier <tim@siosm.fr>
+# SPDX-License-Identifier: Apache-2.0
+#
 # Redirect caddyfile for processing systemd-sysupdate requests.
 #
 # This Caddyfile will redirect incoming requests to GitHub releases, making it
