@@ -1,10 +1,20 @@
 # systemd system extensions for Fedora image based systems
 
-**NOTE: This is currently an experimental project. Make sure to read the known
-limitations section. Use at your own risk.**
+**NOTE: This project is a work in progress. Make sure to read the [known
+limitations section](https://extensions.fcos.fr). Use at your own risk.**
 
-For usage instructions, see the documentation at:
-[extensions.fcos.fr](https://extensions.fcos.fr)
+This repo includes the sources for the main landing page and the configuration
+for the Caddy redirector hosted at <extensions.fcos.fr>/
+
+For sysexts built from Fedora packages only, see
+[extensions.fcos.fr/fedora](https://extensions.fcos.fr/fedora).
+
+For sysexts built from community sources, see
+[extensions.fcos.fr/community](https://extensions.fcos.fr/community).
+
+For general explainations about systemd system extensions (sysexts) and how
+to use them, see the documentation from the main page:
+[extensions.fcos.fr](https://extensions.fcos.fr).
 
 ## Building
 
@@ -65,6 +75,6 @@ This project is heavily inspired by the work done by
 [Thilo](https://github.com/t-lo) on the
 [Flatcar sysext bakery](https://flatcar.github.io/sysext-bakery/).
 
-## License
+## Licenses
 
-[MIT](LICENSE).
+See [LICENSES](LICENSES).
