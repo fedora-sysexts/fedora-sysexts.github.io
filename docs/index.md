@@ -4,13 +4,19 @@ nav_order: 1
 
 # systemd system extensions for Fedora image based systems
 
-**NOTE: This is currently an experimental project. Make sure to read the known
-limitations section. Use at your own risk.**
+**NOTE: This project is a work in progress. Make sure to read the [known
+limitations section](https://extensions.fcos.fr). Use at your own risk.**
 
 This project makes sysexts available for Fedora CoreOS, Fedora Atomic Desktops,
 Fedora IoT, and other Fedora Bootable Container (bootc) systems (and classic
 ostree/rpm-ostree systems). Those sysexts should also work for Universal Blue
 images such as Bazzite, Bluefin, Aurora, uCore.
+
+For the sysexts built from Fedora packages only, see
+[extensions.fcos.fr/fedora](https://extensions.fcos.fr/fedora).
+
+For the sysexts built from community sources, see
+[extensions.fcos.fr/community](https://extensions.fcos.fr/community).
 
 ## What are sysexts?
 
@@ -48,7 +54,9 @@ container build. Otherwise, sysexts might be a good fit.
 
 ## Available sysexts
 
-You can find all the available sysexts in the list on the side of this page.
+You can find all the available sysexts in the list on the side of the
+[extensions.fcos.fr/fedora](https://extensions.fcos.fr/fedora) and
+[extensions.fcos.fr/community](https://extensions.fcos.fr/community) sub pages.
 The sysexts are built for the current stable releases of Fedora, for `x86_64`
 and `aarch64`, if the software is available for it. Some images only target a
 specific variant (CoreOS, Silverblue, Kinoite, etc.). When this is the case, it
@@ -62,7 +70,7 @@ only built for the current Fedora releases used by each Fedora CoreOS streams
 A standalone sysexts manager is being developed to manage, download and update
 sysexts with a more user friendly interface. See
 [travier/sysexts-manager](https://github.com/travier/sysexts-manager) for the
-work in progress. Note that this project is also experimental right now.
+work in progress. Note that this project is experimental right now.
 
 ## Integration with bootc / Bootable Containers
 
@@ -70,7 +78,7 @@ The planned user experience for using those sysexts is that they are built as
 container layers, pushed to a registry as distinct tags, downloaded, managed
 and updated in sync with the OS by bootc. See:
 [bootc#7](https://github.com/containers/bootc/issues/7) and
-[README.containers.md](https://github.com/travier/fedora-sysexts/blob/main/README.containers.md).
+[README.containers.md](https://github.com/fedora-sysexts/fedora/blob/main/README.containers.md).
 This integration is currently still a work in progress.
 
 ## Installing and updating using `systemd-sysupdate`
@@ -157,4 +165,4 @@ directory in the general case).
 
 ## Building, contributing and license
 
-See the project [README](https://github.com/travier/fedora-sysexts).
+See the project [README](https://github.com/fedora-sysexts/fedora).
