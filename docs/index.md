@@ -57,112 +57,19 @@ container build. Otherwise, sysexts might be a good fit.
 You can find all the available sysexts in the list on the side of the
 [extensions.fcos.fr/fedora](https://extensions.fcos.fr/fedora) and
 [extensions.fcos.fr/community](https://extensions.fcos.fr/community) sub pages.
+
 The sysexts are built for the current stable releases of Fedora, for `x86_64`
-and `aarch64`, if the software is available for it. Some images only target a
-specific variant (CoreOS, Silverblue, Kinoite, etc.). When this is the case, it
-is generally explicit from the name (`wireshark-silverblue`) or noted in the
-help text on the sysext page. The sysexts built only for Fedora CoreOS are also
-only built for the current Fedora releases used by each Fedora CoreOS streams
-(*stable*, *testing* and *next*).
+and `aarch64`, if the software is available for it.
 
-## Experimental standalone sysexts-manager
+Some images only target a specific variant (CoreOS, Silverblue, Kinoite, etc.).
+When this is the case, it is generally explicit from the name
+(`wireshark-silverblue`) or noted in the help text on the sysext page.
 
-A standalone sysexts manager is being developed to manage, download and update
-sysexts with a more user friendly interface. See
-[travier/sysexts-manager](https://github.com/travier/sysexts-manager) for the
-work in progress. Note that this project is experimental right now.
+The sysexts built only for Fedora CoreOS are also only built for the current
+Fedora releases used by each Fedora CoreOS streams (*stable*, *testing* and
+*next*).
 
-## Integration with bootc / Bootable Containers
+## Building, contributing and licenses
 
-The planned user experience for using those sysexts is that they are built as
-container layers, pushed to a registry as distinct tags, downloaded, managed
-and updated in sync with the OS by bootc. See:
-[bootc#7](https://github.com/containers/bootc/issues/7) and
-[README.containers.md](https://github.com/fedora-sysexts/fedora/blob/main/README.containers.md).
-This integration is currently still a work in progress.
-
-## Installing and updating using `systemd-sysupdate`
-
-You can currently install and update those sysexts using `systemd-sysupdate`.
-See the individual pages for instructions.
-
-To update all sysexts on a system:
-
-```
-for c in $(/usr/lib/systemd/systemd-sysupdate components --json=short | jq --raw-output '.components[]'); do
-    sudo /usr/lib/systemd/systemd-sysupdate update --component "${c}"
-done
-```
-
-## Installing directly via Ignition
-
-On Fedora CoreOS, you can also directly download the sysexts images as files
-via Ignition. Here is an example Butane config:
-
-```
-variant: fcos
-version: 1.5.0
-storage:
-  files:
-      # Make sure to name your sysext as <sysext-name>.raw, without the version here
-    - path: "/var/lib/extensions/kubernetes-cri-o-1.32.raw"
-      contents:
-        # Use the full URL with the version to download the sysext
-        source: "https://extensions.fcos.fr/extensions/kubernetes-cri-o-1.32/kubernetes-cri-o-1.32-1.32.3-1.fc42-42-x86-64.raw"
-systemd:
-  units:
-    # Enable systemd-sysext.service to merge the sysexts on boot
-    - name: systemd-sysext.service
-      enabled: true
-    # We will use CRI-O
-    - name: docker.socket
-      enabled: false
-      mask: true
-```
-
-For more examples, see:
-- [travier/fedora-coreos-kubernetes](https://github.com/travier/fedora-coreos-kubernetes):
-  A more complete example deploying Kubernetes on Fedora CoreOS using sysexts.
-- [systemd system extension (sysext) tutorial](https://github.com/tormath1/sysext-tutorial):
-  A hands-on tutorial from the KubeCon EU 2025 London Contribfest session.
-
-## Know issues
-
-### Use `systemctl restart systemd-sysext.service` to refresh sysexts on Fedora 41
-
-On Fedora 41 based images, make sure to use `systemctl restart
-systemd-sysext.service` instead of `systemd-sysext merge`. `systemd-sysext
-unmerge` is safe to use.
-
-This issue is fixed in systemd v257 which landed in Fedora 42. See:
-- <https://github.com/coreos/fedora-coreos-tracker/issues/1744>
-- <https://github.com/systemd/systemd/issues/34387>
-- <https://github.com/systemd/systemd/pull/34414>
-- <https://github.com/systemd/systemd/pull/35132>
-
-### Current limitation of systemd-sysupdate
-
-While installing and updating via `systemd-sysupdate` works, this also has a
-few limitations:
-- The sysexts are enabled "statically" for all deplpoyments and if you rebase
-  between major Fedora versions, the sysexts will not match the Fedora release
-  and will not be loaded until you update again using `systemd-sysupdate`.
-- The SELinux policy is currently incomplete for `systemd-importd`, used by
-  `systemd-sysupdate`, which thus prevent us from running updates as a service
-  in the background for now. See:
-  - <https://github.com/fedora-selinux/selinux-policy/pull/2604>
-  - <https://github.com/fedora-selinux/selinux-policy/issues/2622>
-
-## Common errors
-
-### Failed to read metadata for image ...: No medium found
-
-If you encounter this error, it likely means that you have set your sysext
-image with the full name in the `/var/lib/extensions` directory.
-`systemd-sysext` expects the sysexts images to be named only with their own
-name, without any version (thus why we use the `/var/lib/extensions.d`
-directory in the general case).
-
-## Building, contributing and license
-
-See the project [README](https://github.com/fedora-sysexts/fedora).
+See the project
+[README](https://github.com/fedora-sysexts/fedora-sysexts.github.io).
