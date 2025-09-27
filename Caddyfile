@@ -28,6 +28,31 @@
 # This is heavily inspired from:
 # https://github.com/flatcar/sysext-bakery/blob/main/tools/http-url-rewrite-server/Caddyfile
 # which is distributed under the Apache License 2.0
+#
+# Logic for each group of redirections:
+#
+# Extension image:
+#   <name>/<extension>.raw (<extension> = <name>-<version>-<release>-<arch>)
+#     ==>  https://[...]/releases/download/<extension>/<extension>.raw
+#
+# Extension sysupdate conf (short URL for installation)
+#   <name>.conf
+#     ==>  https://[...]/releases/download/<name>/<name>.conf
+#
+# Extension sysupdate conf (namespaced URL)
+#   <name>/<name>.conf
+#     ==>  https://[...]/releases/download/<name>/<name>.conf
+#
+# Extension specific SHA file with extension name in path
+#     <name>/SHA256SUMS
+#       ==>  https://[...]/releases/download/<name>/SHA256SUMS
+#
+# Global SHA256SUMS file with all extensions
+#     SHA256SUMS
+#       ==>  https://[...]/releases/download/latest/SHA256SUMS
+#
+# For testing locally, use:
+# podman run --rm -ti -v $PWD/Caddyfile:/etc/caddy/Caddyfile:Z -p 8080:8080 --user 1000:1000 docker.io/caddy:latest
 
 {
     # Disable admin interface
@@ -36,61 +61,72 @@
     persist_config off
 }
 
-# For testing locally, use:
-# podman run --rm -ti -v $PWD/Caddyfile:/etc/caddy/Caddyfile:Z -p 8080:8080 --user 1000:1000 docker.io/caddy:latest
 http://:8080 {
-    vars base_dest_url "https://github.com/travier/fedora-sysexts/releases/download"
+    # Redirect community extensions
+    vars community_url "https://github.com/fedora-sysexts/community/releases/download"
 
-    # Extension image:
-    #   <name>/<extension>.raw (<extension> = <name>-<version>-<release>-<arch>)
-    #     ==>  https://[...]/releases/download/<extension>/<extension>.raw
+    @community_raw path_regexp community_raw ^.*/community/([^/]+)/([^/]+).raw$
+    redir @community_raw {vars.community_url}/{re.community_raw.2}/{re.community_raw.2}.raw
+
+    @community_gconf path_regexp community_gconf ^.*/community/([^/]+).conf$
+    redir @community_gconf {vars.community_url}/{re.community_gconf.1}/{re.community_gconf.1}.conf
+
+    @community_econf path_regexp community_econf ^.*/community/([^/]+)/([^/]+).conf$
+    redir @community_econf {vars.community_url}/{re.community_econf.1}/{re.community_econf.1}.conf
+
+    @community_esha path_regexp community_esha ^/community/([^/]+)/SHA256SUMS$
+    redir @community_esha {vars.community_url}/{re.community_esha.1}/SHA256SUMS
+
+    @community_gsha path_regexp community_gsha ^/community/SHA256SUMS$
+    redir @community_gsha {vars.community_url}/latest/SHA256SUMS
+
+    # Redirect fedora extensions
+    vars fedora_url "https://github.com/fedora-sysexts/fedora/releases/download"
+
+    @fedora_raw path_regexp fedora_raw ^.*/fedora/([^/]+)/([^/]+).raw$
+    redir @fedora_raw {vars.fedora_url}/{re.fedora_raw.2}/{re.fedora_raw.2}.raw
+
+    @fedora_gconf path_regexp fedora_gconf ^.*/fedora/([^/]+).conf$
+    redir @fedora_gconf {vars.fedora_url}/{re.fedora_gconf.1}/{re.fedora_gconf.1}.conf
+
+    @fedora_econf path_regexp fedora_econf ^.*/fedora/([^/]+)/([^/]+).conf$
+    redir @fedora_econf {vars.fedora_url}/{re.fedora_econf.1}/{re.fedora_econf.1}.conf
+
+    @fedora_esha path_regexp fedora_esha ^/fedora/([^/]+)/SHA256SUMS$
+    redir @fedora_esha {vars.fedora_url}/{re.fedora_esha.1}/SHA256SUMS
+
+    @fedora_gsha path_regexp fedora_gsha ^/fedora/SHA256SUMS$
+    redir @fedora_gsha {vars.fedora_url}/latest/SHA256SUMS
+
+    # Redirect known community extensions from generic 'extensions' path
+    @community_ext_raw path_regexp community_ext_raw ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/([^/]+).raw$
+    redir @community_ext_raw {vars.community_url}/{re.community_ext_raw.2}/{re.community_ext_raw.2}.raw
+
+    @community_ext_gconf path_regexp community_ext_gconf ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*).conf$
+    redir @community_ext_gconf {vars.community_url}/{re.community_ext_gconf.1}/{re.community_ext_gconf.1}.conf
+
+    @community_ext_econf path_regexp community_ext_econf ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/([^/]+).conf$
+    redir @community_ext_econf {vars.community_url}/{re.community_ext_econf.1}/{re.community_ext_econf.1}.conf
+
+    @community_ext_esha path_regexp community_ext_esha ^/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/SHA256SUMS$
+    redir @community_ext_esha {vars.community_url}/{re.community_ext_esha.1}/SHA256SUMS
+
+    # Redirect all other generic path extensions to fedora one
     @raw path_regexp raw ^.*/extensions/([^/]+)/([^/]+).raw$
-    redir @raw {vars.base_dest_url}/{re.raw.2}/{re.raw.2}.raw
+    redir @raw {vars.fedora_url}/{re.raw.2}/{re.raw.2}.raw
 
-    # Extension sysupdate conf (short URL for installation)
-    #   <name>.conf
-    #     ==>  https://[...]/releases/download/<name>/<name>.conf
     @gconf path_regexp gconf ^.*/extensions/([^/]+).conf$
-    redir @gconf {vars.base_dest_url}/{re.gconf.1}/{re.gconf.1}.conf
+    redir @gconf {vars.fedora_url}/{re.gconf.1}/{re.gconf.1}.conf
 
-    # Extension sysupdate conf (namespaced URL)
-    #   <name>/<name>.conf
-    #     ==>  https://[...]/releases/download/<name>/<name>.conf
     @econf path_regexp econf ^.*/extensions/([^/]+)/([^/]+).conf$
-    redir @econf {vars.base_dest_url}/{re.econf.1}/{re.econf.1}.conf
+    redir @econf {vars.fedora_url}/{re.econf.1}/{re.econf.1}.conf
 
-    # Extension specific SHA file with extension name in path
-    #     <name>/SHA256SUMS
-    #       ==>  https://[...]/releases/download/<name>/SHA256SUMS
     @esha path_regexp esha ^/extensions/([^/]+)/SHA256SUMS$
-    redir @esha {vars.base_dest_url}/{re.esha.1}/SHA256SUMS
+    redir @esha {vars.fedora_url}/{re.esha.1}/SHA256SUMS
 
-    # Global SHA256SUMS file with all extensions
-    #     SHA256SUMS
-    #       ==>  https://[...]/releases/download/latest/SHA256SUMS
     @gsha path_regexp gsha ^/extensions/SHA256SUMS$
-    redir @gsha {vars.base_dest_url}/latest/SHA256SUMS
+    redir @gsha {vars.fedora_url}/latest/SHA256SUMS
 
-    # None of the above matched, redirect to the website.
-    redir https://travier.github.io/fedora-sysexts{uri}
-
-    ###########################################################################
-
-    # Redirects to the experimental project that is used for testing
-    vars base_dest_url_exp "https://github.com/travier/fedora-sysexts-exp/releases/download"
-
-    @rawexp path_regexp rawexp ^.*/extensions-exp/([^/]+)/([^/]+).raw$
-    redir @rawexp {vars.base_dest_url_exp}/{re.rawexp.2}/{re.rawexp.2}.raw
-
-    @gconfexp path_regexp gconfexp ^.*/extensions-exp/([^/]+).conf$
-    redir @gconfexp {vars.base_dest_url_exp}/{re.gconfexp.1}/{re.gconfexp.1}.conf
-
-    @econfexp path_regexp econfexp ^.*/extensions-exp/([^/]+)/([^/]+).conf$
-    redir @econfexp {vars.base_dest_url_exp}/{re.econfexp.1}/{re.econfexp.1}.conf
-
-    @eshaexp path_regexp eshaexp ^/extensions-exp/([^/]+)/SHA256SUMS$
-    redir @eshaexp {vars.base_dest_url_exp}/{re.eshaexp.1}/SHA256SUMS
-
-    @gshaexp path_regexp gshaexp ^/extensions-exp/SHA256SUMS$
-    redir @gshaexp {vars.base_dest_url_exp}/latest/SHA256SUMS
+    # Nothing matched, redirect to the website
+    redir https://fedora-sysexts.github.io{uri}
 }
