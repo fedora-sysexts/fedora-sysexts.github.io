@@ -8,16 +8,13 @@ nav_order: 1
 limitations section](https://extensions.fcos.fr/known-issues). Use at your own
 risk.**
 
-This project makes sysexts available for Fedora CoreOS, Fedora Atomic Desktops,
-Fedora IoT, and other Fedora Bootable Container (bootc) systems (and classic
-ostree/rpm-ostree systems). Those sysexts should also work for Universal Blue
-images such as Bazzite, Bluefin, Aurora, uCore.
+This project makes sysexts available for Fedora image based systems.
 
-For the sysexts built from Fedora packages only, see
-[extensions.fcos.fr/fedora](https://extensions.fcos.fr/fedora).
+**For the sysexts built from Fedora packages only, see
+[extensions.fcos.fr/fedora](https://extensions.fcos.fr/fedora).**
 
-For the sysexts built from community sources, see
-[extensions.fcos.fr/community](https://extensions.fcos.fr/community).
+**For the sysexts built from community sources, see
+[extensions.fcos.fr/community](https://extensions.fcos.fr/community).**
 
 ## What are sysexts?
 
@@ -69,6 +66,10 @@ When this is the case, it is generally explicit from the name
 The sysexts built only for Fedora CoreOS are also only built for the current
 Fedora releases used by each Fedora CoreOS streams (*stable*, *testing* and
 *next*).
+
+## Compatibiity
+
+See: [extensions.fcos.fr/compatibility](https://extensions.fcos.fr/compatibility).
 
 ## Building, contributing and licenses
 
