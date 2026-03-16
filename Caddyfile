@@ -99,16 +99,16 @@ http://:8080 {
     redir @fedora_gsha {vars.fedora_url}/latest/SHA256SUMS
 
     # Redirect known community extensions from generic 'extensions' path
-    @community_ext_raw path_regexp community_ext_raw ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/([^/]+).raw$
+    @community_ext_raw path_regexp community_ext_raw ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|ghostty|glab|google-chrome|microsoft-edge|mullvad-vpn|netbird-ui|netbird|nordvpn-gui|nordvpn|nvidia-driver-cuda[^/]*|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/([^/]+)\.raw$
     redir @community_ext_raw {vars.community_url}/{re.community_ext_raw.2}/{re.community_ext_raw.2}.raw
 
-    @community_ext_gconf path_regexp community_ext_gconf ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*).conf$
+    @community_ext_gconf path_regexp community_ext_gconf ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|ghostty|glab|google-chrome|microsoft-edge|mullvad-vpn|netbird-ui|netbird|nordvpn-gui|nordvpn|nvidia-driver-cuda[^/]*|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)\.conf$
     redir @community_ext_gconf {vars.community_url}/{re.community_ext_gconf.1}/{re.community_ext_gconf.1}.conf
 
-    @community_ext_econf path_regexp community_ext_econf ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/([^/]+).conf$
+    @community_ext_econf path_regexp community_ext_econf ^.*/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|ghostty|glab|google-chrome|microsoft-edge|mullvad-vpn|netbird-ui|netbird|nordvpn-gui|nordvpn|nvidia-driver-cuda[^/]*|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/([^/]+)\.conf$
     redir @community_ext_econf {vars.community_url}/{re.community_ext_econf.1}/{re.community_ext_econf.1}.conf
 
-    @community_ext_esha path_regexp community_ext_esha ^/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|glab|google-chrome|incus|microsoft-edge|mullvad-vpn|nordvpn-gui|nordvpn|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/SHA256SUMS$
+    @community_ext_esha path_regexp community_ext_esha ^/extensions/(1password-cli|1password-gui|bandwhich|bitwarden|cilium-cli|cloud-hypervisor|dnclient|docker-ce|ghostty|glab|google-chrome|microsoft-edge|mullvad-vpn|netbird-ui|netbird|nordvpn-gui|nordvpn|nvidia-driver-cuda[^/]*|openconnect|openh264|tailscale|vagrant|virtctl|vscode|vscodium|wasmtime|youki[^/]*)/SHA256SUMS$
     redir @community_ext_esha {vars.community_url}/{re.community_ext_esha.1}/SHA256SUMS
 
     # Redirect all other generic path extensions to fedora one
